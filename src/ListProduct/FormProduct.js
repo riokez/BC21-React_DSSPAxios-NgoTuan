@@ -12,7 +12,6 @@ import { productService } from "../service/product.service";
 class FormProduct extends Component {
   constructor() {
     super();
-
     this.nameRef = createRef();
   }
 
@@ -37,14 +36,6 @@ class FormProduct extends Component {
         message.error("Adding failed product data");
       });
   };
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.dataEdit) {
-      this.setState({
-        ...nextProps.dataEdit,
-      });
-    }
-  }
 
   handleUpdate = (data) => {
     productService
