@@ -1,7 +1,9 @@
 import {
-  REPAIR_PRODUCT,
+  EDIT_PRODUCT,
   UPDATE_PRODUCT,
-  UPDATE_DATA_REPAIR,
+  UPDATE_DATA_EDIT,
+  HANDLE_ONCHANGE,
+  SET_DATADEFAULT,
 } from "../constants/product.constans";
 
 export const updateProduct = (data) => {
@@ -11,15 +13,28 @@ export const updateProduct = (data) => {
   };
 };
 
-export const repairDataProduct = (data) => {
+export const editDataProduct = (data) => {
   return {
-    type: REPAIR_PRODUCT,
+    type: EDIT_PRODUCT,
     payload: data,
   };
 };
 
-export const updateDataRepair = () => {
+export const updateDataEdit = () => {
   return {
-    type: UPDATE_DATA_REPAIR,
+    type: UPDATE_DATA_EDIT,
+  };
+};
+
+export const handleOnChange = (target) => {
+  return {
+    type: HANDLE_ONCHANGE,
+    payload: target,
+  };
+};
+
+export const setDataDefault = () => {
+  return {
+    type: SET_DATADEFAULT,
   };
 };

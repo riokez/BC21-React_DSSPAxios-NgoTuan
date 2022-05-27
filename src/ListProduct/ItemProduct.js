@@ -2,7 +2,9 @@ import { message } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-  repairDataProduct,
+  editDataProduct,
+  setDataDefault,
+  updateDataEdit,
   updateProduct,
 } from "../redux/actions/product.actions";
 import { productService } from "../service/product.service";
@@ -17,6 +19,8 @@ class ItemProduct extends Component {
       .then((res) => {
         console.log(res);
         this.props.updateDataProduct(res.data);
+        this.props.updateDataEdit();
+        this.props.setDataDefault();
         message.success("Product data deletion successful");
       })
       .catch((err) => {
@@ -25,12 +29,12 @@ class ItemProduct extends Component {
       });
   };
 
-  repairProduct = (id) => {
+  editProduct = (id) => {
     productService
       .getIdDataProduct(id)
       .then((res) => {
         console.log(res);
-        this.props.repairProduct(res.data);
+        this.props.editProduct(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -52,7 +56,7 @@ class ItemProduct extends Component {
             <button
               className="btn btn-warning"
               onClick={() => {
-                this.repairProduct(item.id);
+                this.editProduct(item.id);
               }}
             >
               Sửa
@@ -103,8 +107,14 @@ let mapDispatchToProps = (dispatch) => {
     updateDataProduct: (value) => {
       dispatch(updateProduct(value));
     },
-    repairProduct: (data) => {
-      dispatch(repairDataProduct(data));
+    editProduct: (data) => {
+      dispatch(editDataProduct(data));
+    },
+    updateDataEdit: () => {
+      dispatch(updateDataEdit());
+    },
+    setDataDefault: () => {
+      dispatch(setDataDefault());
     },
   };
 };

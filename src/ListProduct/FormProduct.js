@@ -3,42 +3,22 @@ import React, { Component, createRef } from "react";
 import { connect } from "react-redux";
 import {
   updateProduct,
-  updateDataRepair,
+  updateDataEdit,
+  handleOnChange,
+  setDataDefault,
 } from "../redux/actions/product.actions";
 import { productService } from "../service/product.service";
 
 class FormProduct extends Component {
   constructor() {
     super();
-    this.state = {
-      name: "",
-      price: "",
-      img: "",
-      description: "",
-    };
+
     this.nameRef = createRef();
   }
 
   componentDidMount() {
     this.nameRef.current.focus();
   }
-
-  handleOnChange = (target) => {
-    let name = target.name;
-    let value = target.value;
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  stateDefault = () => {
-    this.setState({
-      name: "",
-      price: "",
-      img: "",
-      description: "",
-    });
-  };
 
   handleAddProduct = (data) => {
     productService
@@ -49,8 +29,8 @@ class FormProduct extends Component {
       .then((res) => {
         console.log(res);
         this.props.updateDataProduct(res.data);
+        this.props.setDataDefault();
         message.success("Successfully added product data");
-        this.stateDefault();
       })
       .catch((err) => {
         console.log(err);
@@ -59,9 +39,11 @@ class FormProduct extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      ...nextProps.dataRepair,
-    });
+    if (nextProps.dataEdit) {
+      this.setState({
+        ...nextProps.dataEdit,
+      });
+    }
   }
 
   handleUpdate = (data) => {
@@ -73,9 +55,9 @@ class FormProduct extends Component {
       .then((res) => {
         console.log(res);
         this.props.updateDataProduct(res.data);
-        this.props.updateDataRepair();
+        this.props.updateDataEdit();
+        this.props.setDataDefault();
         message.success("Successfully updated product data");
-        this.stateDefault();
       })
       .catch((err) => {
         console.log(err);
@@ -84,6 +66,7 @@ class FormProduct extends Component {
   };
 
   render() {
+    let { dataDefault, handleOnChange, dataEdit } = this.props;
     return (
       <div className="text-left font-weight-bold">
         <form action="">
@@ -95,10 +78,10 @@ class FormProduct extends Component {
               className="form-control"
               name="name"
               id="name"
-              value={this.state.name}
+              value={dataDefault.name}
               aria-describedby="helpId"
               onChange={(e) => {
-                this.handleOnChange(e.target);
+                handleOnChange(e.target);
               }}
             />
           </div>
@@ -109,10 +92,10 @@ class FormProduct extends Component {
               className="form-control"
               name="price"
               id="price"
-              value={this.state.price}
+              value={dataDefault.price}
               aria-describedby="helpId"
               onChange={(e) => {
-                this.handleOnChange(e.target);
+                handleOnChange(e.target);
               }}
             />
           </div>
@@ -123,10 +106,10 @@ class FormProduct extends Component {
               className="form-control"
               name="img"
               id="img"
-              value={this.state.img}
+              value={dataDefault.img}
               aria-describedby="helpId"
               onChange={(e) => {
-                this.handleOnChange(e.target);
+                handleOnChange(e.target);
               }}
             />
           </div>
@@ -137,19 +120,19 @@ class FormProduct extends Component {
               className="form-control"
               name="description"
               id="description"
-              value={this.state.description}
+              value={dataDefault.description}
               aria-describedby="helpId"
               onChange={(e) => {
-                this.handleOnChange(e.target);
+                handleOnChange(e.target);
               }}
             />
           </div>
         </form>
-        {this.props.dataRepair === null ? (
+        {dataEdit === null ? (
           <button
             className="btn btn-primary"
             onClick={() => {
-              this.handleAddProduct(this.state);
+              this.handleAddProduct(dataDefault);
             }}
           >
             Add Product
@@ -158,7 +141,7 @@ class FormProduct extends Component {
           <button
             className="btn btn-success"
             onClick={() => {
-              this.handleUpdate(this.state);
+              this.handleUpdate(dataDefault);
             }}
           >
             Update
@@ -171,7 +154,8 @@ class FormProduct extends Component {
 
 let mapStateToProps = (state) => {
   return {
-    dataRepair: state.dataRepair,
+    dataEdit: state.dataEdit,
+    dataDefault: state.dataDefault,
   };
 };
 
@@ -180,8 +164,14 @@ let mapDispatchToProps = (dispatch) => {
     updateDataProduct: (value) => {
       dispatch(updateProduct(value));
     },
-    updateDataRepair: () => {
-      dispatch(updateDataRepair());
+    updateDataEdit: () => {
+      dispatch(updateDataEdit());
+    },
+    handleOnChange: (target) => {
+      dispatch(handleOnChange(target));
+    },
+    setDataDefault: () => {
+      dispatch(setDataDefault());
     },
   };
 };
