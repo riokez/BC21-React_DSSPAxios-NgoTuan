@@ -25,8 +25,10 @@ export const ProductReducer = (state = initialState, { type, payload }) => {
     }
 
     case EDIT_PRODUCT: {
-      state.dataDefault = payload;
-      state.dataEdit = state.dataDefault;
+      let dataDefaultNew = { ...state.dataDefault };
+      dataDefaultNew = payload;
+      state.dataDefault = dataDefaultNew;
+      state.dataEdit = dataDefaultNew;
       return { ...state };
     }
 
